@@ -2,16 +2,16 @@ import socket
 import time
 import threading
 
-class ServiceBroadcast:
+class MulticastService:
     def __init__(self,deviceInfo):
         self.MCAST_GRP = '224.0.0.167'
         self.MCAST_PORT = 53317
         self.msg  = deviceInfo.json.encode()
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+        self.send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def broadcast(self):
-        self.sock.sendto(self.msg, (self.MCAST_GRP, self.MCAST_PORT))
+        self.send_sock.sendto(self.msg, (self.MCAST_GRP, self.MCAST_PORT))
 
     def _loop(self):
         while True:

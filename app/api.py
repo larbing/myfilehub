@@ -14,7 +14,7 @@ frontend = SubRouter(__name__,prefix="/api/localsend/v2")
 sessionManager = SessionManager()
 
 @frontend.post('/prepare-upload')
-def prepare_upload(req:Request):
+async def prepare_upload(req:Request):
     session = sessionManager.create()
     results = {'sessionId':session.get_session_id()}
     results['files'] = {}
@@ -28,7 +28,7 @@ def prepare_upload(req:Request):
     return results
 
 @frontend.post('/upload')
-def upload(req:Request):
+async def upload(req:Request):
     sessionId = getString(req.query_params,'sessionId')
     fileId = getString(req.query_params,'fileId')
 
@@ -53,5 +53,7 @@ def upload(req:Request):
     return Response(status_code=200,description="Upload success",headers={})
 
 @frontend.post('/register')
-def register(req:Request):
+async def register(req:Request):
+    print(req.json())
     return deviceInfo.json
+

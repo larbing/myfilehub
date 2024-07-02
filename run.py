@@ -4,10 +4,10 @@ app = Robyn(__file__)
 
 from app import index,api
 from app import STATIC_PATH,deviceInfo
-from app.broadcast import ServiceBroadcast
+from app.multicast import MulticastService
 
 async def startup_handler():
-    service_broadcast = ServiceBroadcast(deviceInfo)
+    service_broadcast = MulticastService(deviceInfo)
     service_broadcast.start()
 
 app.startup_handler(startup_handler)
