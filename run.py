@@ -1,16 +1,10 @@
-
-
-
 from robyn import Robyn 
-
 
 app = Robyn(__file__)
 
 from app import index,api
 from app import STATIC_PATH,deviceInfo
 from app.broadcast import ServiceBroadcast
-
-
 
 async def startup_handler():
     service_broadcast = ServiceBroadcast(deviceInfo)
