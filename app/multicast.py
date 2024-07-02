@@ -6,12 +6,13 @@ class MulticastService:
     def __init__(self,deviceInfo):
         self.MCAST_GRP = '224.0.0.167'
         self.MCAST_PORT = 53317
-        self.msg  = deviceInfo.json.encode()
+        self.deviceInfo = deviceInfo
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def broadcast(self):
-        self.send_sock.sendto(self.msg, (self.MCAST_GRP, self.MCAST_PORT))
+        msg = self.deviceInfo.json.encode()
+        self.send_sock.sendto(msg, (self.MCAST_GRP, self.MCAST_PORT))
 
     def _loop(self):
         while True:
