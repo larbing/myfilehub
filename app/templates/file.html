@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>文件列表</title>
+    <link rel="stylesheet" href="/static/css/style.css?19">
+</head>
+
+<body>
+
+    
+    <div id="tabs">
+        <button class="tab-button active" onclick="switchTab(event, 'All')">全部</button>
+        <button class="tab-button" onclick="switchTab(event, 'Images')">图片</button>
+        <button class="tab-button" onclick="switchTab(event, 'Documents')">文档</button>
+        <button class="tab-button" onclick="switchTab(event, 'Videos')">视频</button>
+    </div>
+
+    <div id="fileList">
+        {% for f in file_list %}
+        <div class="file-item">
+            <span class="file-name">{{ f.name }}</span>{{ f.size | filesizeformat }} {{ time.strftime("%Y-%m-%d",
+            time.localtime(f.created)) }}
+            <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download">下载</a>
+        </div>
+        {% endfor %}
+        <!-- 更多文件项... -->
+    </div>
+
+    <div id="pagination">
+        <a href="#" class="page-link">上一页</a>
+        {% for i in file_list.get_pagination_bar() %}
+        {% if file_list.is_current_page(i) %}
+        <span class="current-page">{{ i }}</span>
+        {% else %}
+        <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+        {% endif %}
+        {% endfor %}
+        <!-- 可以添加更多的页面链接 -->
+        <a href="#" class="page-link">下一页</a>
+    </div>
+    <label for="fileUpload" class="upload-button">上传</label>
+    <input type="file" id="fileUpload" style="display:none;" multiple onchange="showUploadOverlay(event)">
+    <div id="uploadOverlay" style="display:none;">
+        <div class="overlay-content">
+            <span class="close">&times;</span>
+            <div class="upload-info">
+                <h2>文件上传中...</h2>
+                <progress id="uploadProgress" value="0" max="100"></progress>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/file.js?20"></script>
+</body>
+
+</html>

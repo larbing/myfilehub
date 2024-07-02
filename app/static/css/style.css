@@ -1,0 +1,175 @@
+body {
+    font-family: 'Roboto', sans-serif; /* Google推荐的字体 */
+    background-color: #f5f5f5; /* 类似Google Drive的背景色 */
+    color: #333; /* 深灰色的文字 */
+    margin: 0;
+    padding: 0;
+}
+
+#fileList {
+    width: 80%;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* 轻微的阴影 */
+    background-color: #fff; /* 白色背景 */
+}
+
+.file-item {
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 更轻微的阴影 */
+    transition: transform 0.2s ease-in-out; /* 添加过渡效果 */
+}
+
+.file-item:hover {
+    transform: translateY(-5px); /* 悬停时向上移动一点 */
+}
+
+.file-name {
+    font-weight: 500;
+    margin-right: auto; /* 将名称推到左边 */
+}
+
+.file-size {
+    color: #666; /* 浅灰色的大小文本 */
+    margin-left: 10px; /* 与名称之间有一定的间隔 */
+}
+
+.file-download {
+    margin-left: 10px;
+    color: #007bff; /* 类似Bootstrap的主要颜色 */
+    text-decoration: none; /* 移除下划线 */
+}
+
+.file-download:hover {
+    color: #0056b3; /* 悬停时变深 */
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.page-link,
+.current-page {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #007bff; /* 使用蓝色作为链接颜色 */
+    background-color: transparent; /* 透明背景 */
+}
+
+.page-link:hover {
+    background-color: #e0e0e0; /* 悬停时显示浅灰色背景 */
+}
+
+.current-page {
+    font-weight: bold;
+    color: #007bff; /* 保持与链接相同的颜色 */
+    background-color: transparent; /* 透明背景 */
+}
+
+#tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tab-button.active {
+    background-color: #007bff; /* 使用蓝色作为选中Tab的背景颜色 */
+    color: white; /* 文字颜色变为白色 */
+}
+
+.tab-content {
+    display: none; /* 默认隐藏所有内容 */
+    padding: 20px;
+}
+
+/* 可以添加更多样式来美化Tab内容 */
+
+.upload-button {
+    position: fixed; /* 固定定位 */
+    top: 50%; /* 将按钮的顶部位置设置为视口的一半高度 */
+    left: 0px; /* 距离左侧20px */
+    transform: translateY(-50%) scale(0.8); /* 向上移动自身高度的一半，并缩小到80%的尺寸 */
+    display: inline-block;
+    background-color: #007bff; /* 使用蓝色作为按钮背景颜色 */
+    color: white; /* 文字颜色变为白色 */
+    padding: 10px 20px; /* 调整padding以适应圆角长方形 */
+    width: 40px; /* 设置宽度 */
+    height: 20px; /* 设置高度，与宽度的比例适配以形成长方形 */
+    line-height: 20px; /* 调整行高以垂直居中文本 */
+    text-align: center;
+    border-radius: 10px; /* 创建圆角效果 */
+    cursor: pointer;
+    z-index: 1000; /* 确保按钮始终显示在其他内容之上 */
+    transition: transform 0.3s ease; /* 平滑过渡效果 */
+    overflow: hidden; /* 隐藏超出圆角长方形部分的内容 */
+}
+
+.upload-button:hover {
+    background-color: #0056b3; /* 悬停时变深 */
+    transform: translateY(-50%) translateX(20px) scale(1.2); /* 向右移动20px并放大到120%的尺寸 */
+}
+
+/* 非:hover状态下的效果 */
+.upload-button:not(:hover) {
+    transform: translateY(-50%) translateX(-20px) scale(0.8); /* 向左移动20px并缩小到80%的尺寸 */
+}
+.overlay-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#uploadProgress {
+    width: 80%;
+    margin-top: 20px; /* 为进度条添加一些上边距 */
+}
+
+.upload-info {
+    text-align: center; /* 将标题和进度条居中 */
+}
+
+
+
+
+
