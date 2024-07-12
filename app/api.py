@@ -23,7 +23,6 @@ sessionManager = SessionManager()
 
 @frontend.post('/prepare-upload')
 async def prepare_upload(req:Request):
-    print(req.json())
     session = sessionManager.new()
     results = {'sessionId':session.get_session_id()}
     results['files'] = {}
@@ -74,7 +73,7 @@ def push_file_progress(socket_id):
     if not socket_session:
         return None
     
-    def progress(num):
+    def update_progress(num):
         ws = socket_session.get("ws")
         if not ws:
             print("Could not find websocket :{}",socket_id)
@@ -84,7 +83,7 @@ def push_file_progress(socket_id):
         ws.sync_send_to(socket_id, message.json)
         return True
 
-    return progress
+    return update_progress
 
 @frontend.post("/push")
 async def push(req:Request):
@@ -116,7 +115,8 @@ async def push(req:Request):
         return Response(status_code=500,description=str(e),headers={})
 
     finally:
-        sessionManager.remove(session_id)
+        if session_id:
+            sessionManager.remove(session_id)
 
 @frontend.post("/cancel")
 async def cancel(req:Request):
