@@ -6,12 +6,11 @@
     <title>文件列表</title>
     <link rel="stylesheet" href="/static/css/style.css?39">
     <script src="/static/js/libs.js?28"></script>
-    <script src="/static/js/file.js?25"></script>
+    <script src="/static/js/file_upload.js?8"></script>
+    <script src="/static/js/file_push.js?14"></script>
 </head>
 
 <body>
-
-
     <div id="tabs">
         <button class="tab-button active" onclick="switchTab(event, 'All')">全部</button>
         <button class="tab-button" onclick="switchTab(event, 'Images')">图片</button>
@@ -25,7 +24,7 @@
             <span class="file-name">{{ f.name }}</span>{{ f.size | filesizeformat }} {{ time.strftime("%Y-%m-%d",
             time.localtime(f.created)) }}
             <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download">下载</a>
-            <span onclick="app.openPushFilePopup('{{ f.id }}','{{ f.name }}',{{ f.size }})"
+            <span onclick="pusher.openPushFileWindow('{{ f.id }}','{{ f.name }}',{{ f.size }})"
                 class="file-download">推送</span>
         </div>
         {% endfor %}
@@ -44,19 +43,10 @@
         <!-- 可以添加更多的页面链接 -->
         <a href="#" class="page-link">下一页</a>
     </div>
-    <label class="upload-button" onclick="showUploadOverlay()">上传</label>
 
+    
 
-    <!-- <div id="uploadOverlay" style="display:none;">
-        <div class="overlay-content">
-            <span class="close">&times;</span>
-            <div class="upload-info">
-                <h2>文件上传中...</h2>
-                <progress id="uploadProgress" class="progress" value="0" max="0"></progress>
-            </div>
-        </div>
-    </div> -->
-
+    <!-- 弹出推送文件窗口 -->
     <div id="popupPushWindow" class="popup" style="display:none;">
         <div class="popup-content">
             <div id="popupTitle" class="popupTitle"><span id="fileName"></span></div>
@@ -67,14 +57,16 @@
                 {% endfor %}
             </select>
             <input type="hidden" value="" id="fileId"></input>
-            <button id="pushBtn" class="button">推送</button>
+            <button id="pushFileButton" class="button">推送</button>
             <progress id="pushProgress" class="progress" value="0" max="0" style="display: none;"></progress>
-            <div id="popupMessage" class="popupMessage"></div>
+            <div id="pushMessage" class="popupMessage"></div>
             <!-- <div id="dropArea">拖放文件到这里</div> -->
-            <button id="closePopup" class="closePopup">&times;</button>
+            <button id="closePushWindow" class="closePopup">&times;</button>
         </div>
     </div>
 
+    <!-- 弹出上传文件窗口 -->
+    <label class="upload-button" id="uploadFileButton" >上传</label>
     <div id="popupUploadWindow" class="popup" style="display:none;">
         <div class="popup-content">
             <div class="popupTitle">上传文件到服务器</div>
@@ -90,205 +82,10 @@
         <div class="spinner"></div>
     </div>
 
-
-
     <script>
-
-        class FileView {
-
-            constructor() {
-                this.$ = function (id) {
-                    return document.getElementById(id);
-                }
-
-                this.popupWindow = this.$('popupPushWindow');
-                this.pushProgress = this.$('pushProgress');
-                this.popupMessage = this.$('popupMessage');
-                this.deviceSelect = this.$('deviceSelect');
-
-                this.$('closePopup').onclick = () => {
-                    this.closePopup();
-                }
-
-                this.$('pushBtn').onclick = () => {
-                    this.pushClick();
-                }
-            }
-
-            openPushFilePopup(fileid, fileName, fileSize) {
-                this.$('fileId').value = fileid;
-                this.$('fileName').innerText = fileName;
-                this.popupWindow.style.display = 'flex';
-                this.resetPushProgress();
-                this.pushProgress.max = fileSize;
-                this.setPushMessage("等待设备推送...");
-            }
-
-            setPushMessage(msg) {
-                this.popupMessage.innerText = msg;
-            }
-
-            closePopup() {
-                this.popupWindow.style.display = 'none';
-                this.$('fileId').value = "";
-                this.$('fileName').innerText = "";
-            }
-
-            showLoading() {
-                this.$('loadingWindow').style.display = 'flex';
-            }
-
-            hideLoading() {
-                this.$('loadingWindow').style.display = 'none';
-            }
-
-            showPushProgress() {
-                this.pushProgress.style.display = 'flex';
-                this.pushProgress.value = 0;
-                this.setPushMessage("正在推送...");
-            }
-
-            updatePushProgress(value) {
-                this.pushProgress.value = value;
-            }
-
-            resetPushProgress() {
-                this.pushProgress.style.display = 'none';
-                this.pushProgress.value = 0;
-            }
-
-            pushClick() { }
-
-            getFileId() {
-                return this.$('fileId').value;
-            }
-
-            getDeviceId() {
-                return this.deviceSelect.value;
-            }
-        }
-
-        class FileApp {
-            constructor() {
-                this.view = new FileView();
-                this.socket = new MyWebSocket('ws://' + document.location.host + '/ws');
-                this.localSendClient = new LocalSendClient();
-            }
-
-            pushFile(onStart) {
-                var deviceId = this.view.getDeviceId();
-                var fileId = this.view.getFileId();
-
-                if (deviceId == "") {
-                    alert("请选择设备");
-                    return;
-                }
-
-                if (fileId == "") {
-                    alert("请选择文件");
-                    return;
-                }
-
-                this.view.showPushProgress();
-                this.localSendClient.push(fileId, deviceId, this.socket.socketId)
-                    .then(() => {
-                        this.view.setPushMessage("推送成功");
-                    })
-                    .catch(() => {
-                        this.view.setPushMessage("推送失败");
-                    });
-            }
-
-            openPushFilePopup(fileid, fileName, fileSize) {
-                this.view.openPushFilePopup(fileid, fileName, fileSize);
-            }
-
-            onUpdatePushProgress(message) {
-                try {
-                    if (message.name == 'PUSH_FILE_PROGRESS') {
-                        this.view.updatePushProgress(message.values.total_bytes);
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-
-            init() {
-                this.socket.onMessage = (message) => {
-                    this.onUpdatePushProgress(message);
-                }
-
-                this.view.pushClick = () => {
-                    this.pushFile();
-                }
-            }
-        }
-
         window.onload = function () {
-            const app = new FileApp();
-            app.init()
-            window.app = app;
+            window.pusher = new FilePusher('ws://' + document.location.host + '/ws');
         };
-
-        // dragDropUpload.js
-        document.addEventListener('DOMContentLoaded', function () {
-            const dropArea = document.getElementById('dropArea');
-
-            dropArea.addEventListener('click', function (e) {
-                document.getElementById('fileUpload').addEventListener('change', function (e) {
-                    var files = e.target.files;
-                    if (files.length === 0) {
-                        alert("请至少选择一个文件!");
-                        return;
-                    }
-                    handleFiles(files);
-                });
-
-                document.getElementById('fileUpload').click();
-            });
-
-            // 监听拖进事件
-            dropArea.addEventListener('dragenter', function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy'; // 设置拖放效果
-                dropArea.classList.add('dragover'); // 改变样式表示正在拖进
-            });
-
-            // 监听拖出事件
-            dropArea.addEventListener('dragleave', function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                dropArea.classList.remove('dragover'); // 恢复样式
-            });
-
-            dropArea.addEventListener('dragover', (e) => {
-                e.stopPropagation();
-                e.preventDefault(); //阻止默认行为，允许放置
-            });
-
-            // 监听拖放事件
-            dropArea.addEventListener('drop', function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                const files = e.dataTransfer.files; // 获取拖放的文件列表
-                handleFiles(files);
-                dropArea.classList.remove('dragover'); // 恢复样式
-            });
-
-            // 处理文件
-            function handleFiles(files) {
-                const progress = document.getElementById('uploadProgress');
-                const uploadMessage = document.getElementById('uploadMessage');
-                progress.value = 0;
-                progress.style.display = 'flex';
-                uploadMessage.innerText = '正在上传...';
-                handleFileUpload(files, progress, uploadMessage);
-            }
-        });
-
-
     </script>
 </body>
 

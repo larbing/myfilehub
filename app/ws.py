@@ -14,17 +14,15 @@ sessionManager = SessionManager()
 
 @websocket.on("message")
 async def message(ws, msg, global_dependencies):
-    return 
+    pass 
 
 @websocket.on("close")
 async def close(ws):
     sessionManager.remove(ws.id)
-    return
 
 @websocket.on("connect")
 async def connect(ws):
     sesssion = sessionManager.create(ws.id)
     sesssion.set('ws',ws)
 
-    message = Message(MessageName.CONNECT_SUCCESS,{'socket_id':ws.id})
-    return message.json
+    return Message(MessageName.CONNECT_SUCCESS,{'socket_id':ws.id}).json
