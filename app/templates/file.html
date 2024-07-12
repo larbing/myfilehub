@@ -84,7 +84,8 @@
 
     <script>
         window.onload = function () {
-            window.pusher = new FilePusher('ws://' + document.location.host + '/ws');
+            window.pusher    = new FilePusher('ws://' + document.location.host + '/ws');
+            window.uploader  = new FileUploader();
         };
     </script>
 </body>
