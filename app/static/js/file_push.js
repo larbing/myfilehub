@@ -7,7 +7,6 @@ class FilePusher {
         }
 
         this.localSendClient = new LocalSendClient();
-        this.socket = new MyWebSocket(url);
 
         this.popupWindow = this.$('popupPushWindow');
         this.progress = this.$('pushProgress');
@@ -23,11 +22,6 @@ class FilePusher {
     {
         this.closePushWindow.addEventListener('click', this.closeWindowHandle.bind(this));
         this.pushFileButton.addEventListener('click', this.pushFileHandle.bind(this));
-
-        const self = this;
-        this.socket.onMessage = (message) => {
-            this.updateProgress(self,message);
-        }
     }
 
     openPushFileWindow(fileid, fileName, fileSize) {
@@ -37,7 +31,6 @@ class FilePusher {
         this.progress.style.display = 'none';
         this.progress.value = 0;
         this.progress.max = fileSize;
-
         this.printMessage("等待设备推送...");
     }
 
@@ -62,7 +55,8 @@ class FilePusher {
         this.progress.style.display = 'flex';
         this.progress.value = 0;
         this.printMessage("正在推送...");
-        this.localSendClient.push(fileId, deviceId, this.socket.socketId)
+        const progress = this.updateProgress.bind(this);
+        this.localSendClient.push(fileId, deviceId,progress)
             .then(() => {
                 this.printMessage("推送成功");
             })
@@ -75,14 +69,8 @@ class FilePusher {
         this.pushMessage.innerText = msg;
     }
 
-    updateProgress(self,message) {
-        try {
-            if (message.name == 'PUSH_FILE_PROGRESS') {
-                self.progress.value = message.values.total_bytes;
-            }
-        } catch (error) {
-            console.error(error);
-        }
+    updateProgress(total_bytes) {
+        this.progress.value = total_bytes;
     }
 
     getFileId() {
