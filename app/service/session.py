@@ -1,6 +1,6 @@
 import uuid
 
-from .utils import singleton,synchronized
+from ..utils import singleton,synchronized
 
 class SimpleSession:
     def __init__(self):
@@ -29,8 +29,15 @@ class SessionManager:
         self.sessions = {}
 
     @synchronized
-    def create(self):
+    def new(self):
         new_session = SimpleSession()
+        self.sessions[new_session.get_session_id()] = new_session
+        return new_session
+
+    @synchronized
+    def create(self,session_id):
+        new_session = SimpleSession()
+        new_session.session_id = session_id
         self.sessions[new_session.get_session_id()] = new_session
         return new_session
 

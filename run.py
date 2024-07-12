@@ -2,17 +2,19 @@ from robyn import Robyn
 
 app = Robyn(__file__)
 
-from app import index,api
-from app import STATIC_PATH,deviceInfo
-from app.multicast import MulticastService
+from app import index,api,ws
+from app import STATIC_PATH,DEVICE_MANAGER as deviceManager
+from app.service.multicast import MulticastService
 
 async def startup_handler():
-    service_broadcast = MulticastService(deviceInfo)
+    service_broadcast = MulticastService(deviceManager.this_device)
     service_broadcast.start()
 
 app.startup_handler(startup_handler)
 app.include_router(index.frontend)
 app.include_router(api.frontend)
+app.include_router(ws.frontend)
+
 app.add_directory(
         route="/static",
         directory_path=STATIC_PATH,
