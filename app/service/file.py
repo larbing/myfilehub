@@ -160,12 +160,12 @@ class FileSender:
         
         return sessionId, file_token
     
-    async def upload_file(self,sessionId,file,file_token, callback=None):
+    async def upload_file(self,sessionId,file,file_token, upload_progress=None):
 
         def read_chunked():
             for num,chunk in file.chunked():
-                if callback:
-                    callback(num)
+                if upload_progress:
+                    upload_progress(num)
                 yield chunk
 
         upload_url = self.api.build_upload_url(sessionId, file.id, file_token)
@@ -178,7 +178,9 @@ class FileSender:
         session_id, task = await self.create_send_file_task(file)
         return await asyncio.gather(task)
         
-    async def create_send_file_task(self, file, callback=None):
+    async def create_send_file_task(self, file, send_file_progress=None):
         session_id, file_token = await self.prepare_upload(file)
-        task = asyncio.create_task(self.upload_file(session_id, file, file_token,callback=callback))
+        task = asyncio.create_task(self.upload_file(session_id, file, 
+                                                    file_token,
+                                                    upload_progress=send_file_progress))
         return session_id,task

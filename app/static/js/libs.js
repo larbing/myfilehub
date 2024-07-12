@@ -63,8 +63,8 @@ class MyWebSocket {
           try
           {
             const message = JSON.parse(event.data);
-            if (message.msg_name == 'connect_success') {
-                this.socketId = message.socket_id;
+            if (message.name == 'CONNECT_SUCCESS') {
+                this.socketId = message.values.socket_id;
             }
             this.onMessage(message);
           } catch(e) {

@@ -3,6 +3,19 @@ import mimetypes
 from urllib.parse import urlparse, urlencode, urlunparse
 from dataclasses import dataclass
 from hashlib import sha256
+from .enums import MessageName
+
+@dataclass
+class Message:
+    name: MessageName
+    values: dict
+
+    @property
+    def json(self):
+        return json.dumps({
+            "name": self.name.value,
+            "values": self.values
+        })
 
 class UrlBuilder:
     def __init__(self, scheme, netloc):

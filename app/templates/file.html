@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>文件列表</title>
     <link rel="stylesheet" href="/static/css/style.css?39">
-    <script src="/static/js/libs.js?27"></script>
+    <script src="/static/js/libs.js?28"></script>
     <script src="/static/js/file.js?25"></script>
 </head>
 
@@ -205,8 +205,8 @@
 
             onUpdatePushProgress(message) {
                 try {
-                    if (message.msg_name == 'push_file_progress') {
-                        this.view.updatePushProgress(message.total_bytes);
+                    if (message.name == 'PUSH_FILE_PROGRESS') {
+                        this.view.updatePushProgress(message.values.total_bytes);
                     }
                 } catch (error) {
                     console.error(error);

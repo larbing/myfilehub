@@ -14,7 +14,8 @@ from .utils import *
 from .service.session import SessionManager
 from .service.device import DeviceInfo
 from .service.file import FileSender
-from .enums import TaskName
+from .enums import TaskName,MessageName
+from .models import Message
 
 frontend = SubRouter(__name__,prefix="/api/localsend/v2")
 
@@ -68,24 +69,22 @@ async def register(req:Request):
     return deviceManager.this_device.json
 
 
-def push_progress(socket_id):
+def push_file_progress(socket_id):
     socket_session = sessionManager.get(socket_id)
     if not socket_session:
         return None
     
-    def callback(num):
+    def progress(num):
         ws = socket_session.get("ws")
         if not ws:
             print("Could not find websocket :{}",socket_id)
             return False
 
-        msg = {}
-        msg['msg_name'] = 'push_file_progress'
-        msg['total_bytes'] = num
-        ws.sync_send_to(socket_id, jsonify(msg))
+        message = Message(MessageName.PUSH_FILE_PROGRESS,{'total_bytes':num})
+        ws.sync_send_to(socket_id, message.json)
         return True
 
-    return callback
+    return progress
 
 @frontend.post("/push")
 async def push(req:Request):
@@ -102,10 +101,11 @@ async def push(req:Request):
     if not file:
         return Response(status_code=404,description="File not found",headers={})
     
+    session_id = None
     try:
         sender = FileSender(target_device, deviceManager.this_device)
-        callback = push_progress(socket_id)
-        session_id,task = await sender.create_send_file_task(file,callback=callback)
+        progress = push_file_progress(socket_id)
+        session_id,task = await sender.create_send_file_task(file,send_file_progress=progress)
         session = sessionManager.create(session_id)
         session.set(TaskName.PUSH_FILE,task)
         await asyncio.gather(task)
@@ -113,7 +113,6 @@ async def push(req:Request):
         return Response(status_code=200,description="success",headers={})
     
     except Exception as e:
-        print(e)
         return Response(status_code=500,description=str(e),headers={})
 
     finally:
