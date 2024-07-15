@@ -10,11 +10,14 @@ class FileShower {
         this.fileImage = this.$('fileImage');
         this.fileVideo = this.$('fileVideo');
         this.fileText = this.$('fileText');
+        this.updateFileTextButton = this.$('updateFileTextButton');
+        this.fileId = this.$('fileId');
         this.init();
     }
 
     init() {
         this.closeWindowButton.addEventListener('click', this.closeWindowHandle.bind(this));
+        this.updateFileTextButton.addEventListener('click', this.updateFileTextHandle.bind(this));
     }
 
     openImageWindow(url) {
@@ -29,11 +32,18 @@ class FileShower {
         this.fileVideo.src = url;
     }
 
-    openTextWindow(url) {
+    openTextWindow(fileId, filename) {
+        const url = "/file/" + fileId + "/name/" + filename;
         this.popupWindow.style.display = 'flex';
         this.fileText.style.display = 'flex';
+        this.updateFileTextButton.style.display = 'flex';
+        this.fileId.value = fileId;
 
-        fetch(url)
+        fetch(url, {
+            headers: {
+                'content-bytes-limit': 1048576
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -47,6 +57,35 @@ class FileShower {
                 console.error('There has been a problem with your fetch operation:', error);
             });
 
+    }
+
+    updateFileTextHandle() {
+        const url = "/update-context";
+
+        const data = {
+            "fileId": this.fileId.value,
+            "context": this.fileText.value
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(text => {
+                alert(text);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
     }
 
     closeWindowHandle(e) {

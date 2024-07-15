@@ -104,7 +104,7 @@ class FileService:
 
         return sorted(files_list, key=lambda x: x.created, reverse=True)
         
-    def list_files(self, page_size=10, current_page=1):
+    def list_files(self, page_size=10, current_page=1,filter_func=None):
         """
         返回指定目录下的所有文件对象（FileModel）列表，支持分页。
         
@@ -117,9 +117,14 @@ class FileService:
         """
         start_index = (current_page - 1) * page_size
         end_index = start_index + page_size
-        total = len(self.files)
+        file_list = self.files
+
+        if filter_func:
+            file_list = list(filter(filter_func, self.files))
+
+        total = len(file_list)
         page_count = total // page_size + (1 if total % page_size > 0 else 0)
-        return Pagination(self.files[start_index:end_index], current_page, page_size, page_count, total)
+        return Pagination(file_list[start_index:end_index], current_page, page_size, page_count, total)
          
     def get_file_by_id(self, file_id):
         """
