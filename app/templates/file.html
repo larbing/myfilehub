@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>文件列表</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/style.css?39">
     <script src="/static/js/libs.js?34"></script>
     <script src="/static/js/file_upload.js?9"></script>
     <script src="/static/js/file_push.js?19"></script>
+    <script src="/static/js/file_show.js?10"></script>
 </head>
 
 <body>
@@ -21,11 +23,30 @@
     <div id="fileList">
         {% for f in file_list %}
         <div class="file-item">
-            <span class="file-name">{{ f.name }}</span>{{ f.size | filesizeformat }} {{ time.strftime("%Y-%m-%d",
+            <span class="file-name">{{ f.name }}</span>
+
+
+
+            {{ f.size | filesizeformat }} {{ time.strftime("%Y-%m-%d",
             time.localtime(f.created)) }}
-            <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download">下载</a>
-            <span onclick="pusher.openPushFileWindow('{{ f.id }}','{{ f.name }}',{{ f.size }})"
-                class="file-download">推送</span>
+
+            {% if f.is_image() %}
+            <span class="file-download"><i class="bi bi-card-image"
+                    onclick="shower.openImageWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
+
+            {% elif f.is_video() %}
+            <span class="file-download"><i class="bi bi-play-circle-fill"
+                    onclick="shower.openVideoWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
+            
+            {% elif f.is_text() %}
+            <span class="file-download"><i class="bi bi-journal-code" onclick="shower.openTextWindow('1111')"></i></span>
+
+            {% else %}
+            <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download" alt="下载"><i
+                    class="bi bi-cloud-arrow-down-fill"></i></a>
+            {% endif %}
+            <span onclick="pusher.openPushFileWindow('{{ f.id }}','{{ f.name }}',{{ f.size }})" class="file-download"
+                alt="推送"><i class="bi bi-send" alt="推送"></i></span>
         </div>
         {% endfor %}
         <!-- 更多文件项... -->
@@ -44,7 +65,7 @@
         <a href="#" class="page-link">下一页</a>
     </div>
 
-    
+
 
     <!-- 弹出推送文件窗口 -->
     <div id="popupPushWindow" class="popup" style="display:none;">
@@ -66,26 +87,38 @@
     </div>
 
     <!-- 弹出上传文件窗口 -->
-    <label class="upload-button" id="uploadFileButton" >上传</label>
+    <label class="upload-button" id="uploadFileButton">上传</label>
     <div id="popupUploadWindow" class="popup" style="display:none;">
         <div class="popup-content">
             <div class="popupTitle">上传文件到服务器</div>
             <div id="dropArea" class="dropArea">拖放文件到这里或者点击这里</div>
             <progress id="uploadProgress" class="progress" value="0" max="0" style="display: none;"></progress>
             <button id="closeUploadWindow" class="closePopup">&times;</button>
-            <input type="file" id="fileUpload" style="display:none;" multiple >
+            <input type="file" id="fileUpload" style="display:none;" multiple>
             <div id="uploadMessage" class="popupMessage"></div>
         </div>
     </div>
 
-    <div id="loadingWindow" class="loading-window" style="display:none;">
-        <div class="spinner"></div>
+    <div id="popupImageWindow" class="popup" style="display:none;">
+        <div class="popup-content">
+            <video id="fileVideo" width="100%" height="240" controls style="display:none;">
+            </video>
+            <img id="fileImage" src="" style="width:50%; display:none;">
+            <textarea id="fileText" name="message" rows="4" cols="50" style="display:none;">
+            </textarea>
+            <button id="closeImageWindowButton" class="closePopup">&times;</button>
+        </div>
     </div>
+
+    <!-- <div id="loadingWindow" class="loading-window" >
+        <div class="spinner"></div>
+    </div> -->
 
     <script>
         window.onload = function () {
-            window.pusher    = new FilePusher('ws://' + document.location.host + '/ws');
-            window.uploader  = new FileUploader();
+            window.pusher = new FilePusher('ws://' + document.location.host + '/ws');
+            window.uploader = new FileUploader();
+            window.shower = new FileShower();
         };
     </script>
 </body>

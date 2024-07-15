@@ -55,6 +55,24 @@ class FileModel:
                     break
                 num += len(chunk)
                 yield (num, chunk)
+    
+    def is_image(self):
+        if not self.type:
+            return False
+        
+        return self.type.startswith("image/")
+
+    def is_video(self):
+        if not self.type:
+            return False
+        
+        return self.type.startswith("video/")
+    
+    def is_text(self):
+        if not self.type:
+            return False
+        
+        return self.type.startswith("text/")
 
     def as_dict(self):
         return {
