@@ -1,6 +1,6 @@
-class FileShower  {
+class FileShower {
 
-    constructor() { 
+    constructor() {
         this.$ = function (id) {
             return document.getElementById(id);
         }
@@ -9,12 +9,11 @@ class FileShower  {
         this.closeWindowButton = this.$('closeImageWindowButton');
         this.fileImage = this.$('fileImage');
         this.fileVideo = this.$('fileVideo');
-        this.fileText  = this.$('fileText');
+        this.fileText = this.$('fileText');
         this.init();
     }
 
-    init() 
-    {
+    init() {
         this.closeWindowButton.addEventListener('click', this.closeWindowHandle.bind(this));
     }
 
@@ -30,10 +29,24 @@ class FileShower  {
         this.fileVideo.src = url;
     }
 
-    openTextWindow(text) {
+    openTextWindow(url) {
         this.popupWindow.style.display = 'flex';
         this.fileText.style.display = 'flex';
-        this.fileText.value = text;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(text => {
+                this.fileText.value = text;
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
     }
 
     closeWindowHandle(e) {

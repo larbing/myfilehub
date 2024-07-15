@@ -39,7 +39,7 @@
                     onclick="shower.openVideoWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
             
             {% elif f.is_text() %}
-            <span class="file-download"><i class="bi bi-journal-code" onclick="shower.openTextWindow('1111')"></i></span>
+            <span class="file-download"><i class="bi bi-journal-code" onclick="shower.openTextWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
 
             {% else %}
             <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download" alt="下载"><i
