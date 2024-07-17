@@ -17,7 +17,7 @@ UPLOAD_PATH = os.getenv('UPLOAD_PATH')
 FILE_SERVICE = FileService(UPLOAD_PATH)
 
 SHARE_HOST = os.getenv('SHARE_HOST')
-
+DOWNLOAD_HOST = os.getenv('DOWNLOAD_HOST')
 
 DEVICE_MANAGER = DeviceManager(DeviceInfo(
     alias="server",

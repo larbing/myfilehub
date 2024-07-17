@@ -3,7 +3,7 @@ import time
 
 from robyn import SubRouter,Request,Response
 from . import render_template,UPLOAD_PATH,send_file
-from . import FILE_SERVICE as fileService,DEVICE_MANAGER as deviceManager,SHARE_HOST
+from . import FILE_SERVICE as fileService,DEVICE_MANAGER as deviceManager,SHARE_HOST,DOWNLOAD_HOST
 from .utils import *
 
 frontend = SubRouter(__name__,prefix="/share")
@@ -15,7 +15,7 @@ async def getfile(req:Request):
     if not file:
         return Response(status_code=404,description="File not found",headers={})
     
-    return render_template('share.html',file=file,host=SHARE_HOST)
+    return render_template('share.html',file=file,share_host=SHARE_HOST,download_host=DOWNLOAD_HOST)
 
 @frontend.get("/:id/name/:name")
 async def downfile(req:Request):

@@ -3,6 +3,7 @@
 # 定义变量
 GIT_REPO_URL="https://github.sonainai.com/larbing/myfilehub.git"
 PROJECT_DIR="/home/rock/git/myfilehub"
+env_file="/home/rock/config/myfilehub.env"
 DOCKER_CONTAINER_NAME="myfilehub"
 DOCKER_IMAGE_NAME="abc7223/myfilehub"
 DOCKER_TAG="latest" # 或者指定版本号，如 "v1.0"
@@ -25,6 +26,11 @@ clone_git_repo() {
     git clone $GIT_REPO_URL $PROJECT_DIR
 }
 
+copy_config() {
+    echo "复制配置文件..."
+    cp $env_file $PROJECT_DIR/robyn.env
+}
+
 # 函数：构建Docker镜像
 build_docker_image() {
     echo "构建Docker镜像..."
@@ -42,7 +48,7 @@ stop_and_remove_old_container() {
 run_new_container() {
     echo "使用新镜像启动新的容器..."
     # 这里添加您启动容器所需的参数，例如端口映射、环境变量等
-    docker run -d  -v /data/www:/data --network host --name $DOCKER_CONTAINER_NAME $DOCKER_IMAGE_NAME:$DOCKER_TAG
+    docker run -d --restart unless-stopped -v /data/www:/data --network host --name $DOCKER_CONTAINER_NAME $DOCKER_IMAGE_NAME:$DOCKER_TAG
 }
 
 # 主程序
@@ -58,6 +64,7 @@ fi
 # 检查仓库克隆是否成功
 if [ $? -eq 0 ]; then
     echo "仓库克隆成功，准备构建Docker镜像..."
+    copy_config
     build_docker_image
 else
     echo "仓库克隆失败，请检查网络连接和Git仓库URL。"

@@ -12,9 +12,4 @@ ENV TZ 'Asia/Shanghai'
 
 COPY . .
 
-ENV UPLOAD_PATH /data
-ENV SHARE_HOST http://192.168.200.151:8081
-RUN rm robyn.env
-
-
 CMD [ "python", "./run.py" ]
