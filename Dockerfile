@@ -2,6 +2,8 @@ FROM python:3
 
 WORKDIR /home/app
 
+USER app
+
 COPY requirements.txt ./
 
 RUN pip install -i https://mirrors.aliyun.com/pypi/simple/  pip -U
