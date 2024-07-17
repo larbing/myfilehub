@@ -21,7 +21,7 @@ pull_latest_image() {
 run_new_container() {
     echo "使用新镜像启动新的容器..."
     # 这里添加您启动容器所需的参数，例如端口映射、环境变量等
-    docker run -d -v /data:/data -p 8080:8080 8081:8081 --name $DOCKER_CONTAINER_NAME $DOCKER_IMAGE_NAME:$DOCKER_TAG
+    docker run --rm -d -v /data:/data -p 8080:8080 -p 8081:8081 --name myfilehub abc7223/myfilehub:latest
 }
 
 # 主程序
