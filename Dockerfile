@@ -2,7 +2,7 @@ FROM python:3
 
 WORKDIR /home/app
 
-USER app
+USER rock
 
 COPY requirements.txt ./
 
