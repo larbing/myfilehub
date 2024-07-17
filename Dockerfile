@@ -11,8 +11,4 @@ ENV TZ 'Asia/Shanghai'
 
 COPY . .
 
-RUN useradd -ms /bin/bash app
-
-USER app
-
 CMD [ "python", "./run.py" ]
