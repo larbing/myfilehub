@@ -17,7 +17,7 @@ delete_existing_project_dir() {
 
 pull_git_repo() {
     echo "更新Git仓库..."
-    cd $PROJECT_DIR && git pull
+    cd $PROJECT_DIR && rm robyn.env && git pull
 }
 
 # 函数：克隆Git仓库

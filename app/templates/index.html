@@ -42,7 +42,7 @@
             <span class="file-download"><i class="bi bi-journal-code" onclick="shower.openTextWindow('{{ f.id }}','{{ f.name }}')"></i></span>
 
             {% else %}
-            <a href="/share/{{ f.id }}/name/{{ f.name }}" download class="file-download" alt="下载"><i
+            <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download" alt="下载"><i
                     class="bi bi-cloud-arrow-down-fill"></i></a>
             {% endif %}
             <span onclick="pusher.openPushFileWindow('{{ f.id }}','{{ f.name }}',{{ f.size }})" class="file-download"

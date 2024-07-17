@@ -53,3 +53,14 @@ async def update_context(req:Request):
 
     fileService.write_to_file(context.encode(), file.name)
     return Response(status_code=200,description="更新成功",headers={})
+
+@frontend.get("/file/:id/name/:name")
+async def downfile(req:Request):
+    id = req.path_params.get('id')
+    file = fileService.get_file_by_id(id)
+    limit = getInt(req.headers,'content-bytes-limit',0)
+
+    if not file:
+        return Response(status_code=404,description="File not found",headers={})
+
+    return send_file(file,bytes_limit=limit)

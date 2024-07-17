@@ -11,6 +11,7 @@ frontend = SubRouter(__name__,prefix="/share")
 @frontend.get("/:id")
 async def getfile(req:Request):
     id = getString(req.path_params,'id')
+    fileService.load()
     file = fileService.get_file_by_id(id)
     if not file:
         return Response(status_code=404,description="File not found",headers={})

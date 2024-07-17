@@ -87,6 +87,9 @@ class FileService:
         self.base_path = base_path
         self.files = self._load_files()  # 加载文件列表
 
+    def load(self):
+        self.files = self._load_files()
+
     def _load_files(self):
         """
         初始化时加载base_path下所有文件的列表。
