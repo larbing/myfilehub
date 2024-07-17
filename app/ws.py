@@ -14,11 +14,12 @@ sessionManager = SessionManager()
 
 @websocket.on("message")
 async def message(ws, msg, global_dependencies):
-    pass 
+    return "{}" 
 
 @websocket.on("close")
 async def close(ws):
     sessionManager.remove(ws.id)
+    return "{}"
 
 @websocket.on("connect")
 async def connect(ws):
