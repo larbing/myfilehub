@@ -1,2 +1,0 @@
-UPLOAD_PATH=/Users/rock/Downloads
-SHARE_HOST=http://192.168.200.240:8081
