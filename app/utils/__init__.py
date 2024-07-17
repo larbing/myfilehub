@@ -13,6 +13,7 @@ def getString(values,key,default=None):
     value = values.get(key)
     if not value:
         return default
+    
     try: 
         return str(value)
     except:

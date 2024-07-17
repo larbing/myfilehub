@@ -4,7 +4,7 @@ import time
 
 from robyn import SubRouter,Request,Response
 from . import render_template,UPLOAD_PATH,send_file
-from . import FILE_SERVICE as fileService,DEVICE_MANAGER as deviceManager
+from . import FILE_SERVICE as fileService,DEVICE_MANAGER as deviceManager,SHARE_HOST
 from .utils import *
 
 frontend = SubRouter(__name__)
@@ -28,18 +28,7 @@ async def index(req:Request):
 
     file_list = fileService.list_files(current_page=page,filter_func=filter_func)
     device_list = deviceManager.get_all_devices()
-    return render_template('file.html',file_list=file_list,time=time,device_list=device_list,type=type)
-
-@frontend.get("/file/:id/name/:name")
-async def downfile(req:Request):
-    id = req.path_params.get('id')
-    file = fileService.get_file_by_id(id)
-    limit = getInt(req.headers,'content-bytes-limit',0)
-
-    if not file:
-        return Response(status_code=404,description="File not found",headers={})
-
-    return send_file(file,bytes_limit=limit)
+    return render_template('index.html',file_list=file_list,time=time,device_list=device_list,type=type)
 
 @frontend.post("/upload")
 async def upload(req:Request):

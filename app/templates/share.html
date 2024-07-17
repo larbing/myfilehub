@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>File Sharing Page</title>
+    <link rel="stylesheet" href="/static/css/share.css?2">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>文件分享</h1>
+        <div class="file-info">
+            <p><strong>文件名:</strong> {{ file.name }}</p>
+            <p><strong>文件大小:</strong> {{ file.size | filesizeformat }}</p>
+            <div id="qrcode"></div>
+        </div>
+        <a href="/share/{{ file.id }}/name/{{ file.name }}" class="download-btn">下载</a>
+        <input type="text" id="share-link" value="{{ host }}/share/{{ file.id }}" readonly>
+        <button onclick="copyLink()">复制链接</button>
+    </div>
+    <script>
+
+        // script.js
+        function copyLink() {
+            var link = document.getElementById("share-link");
+            link.select();
+            link.setSelectionRange(0, 99999); // For mobile devices
+            
+            navigator.clipboard.writeText(link.value)
+            .then(() => {
+                alert("链接已复制到剪贴板");
+            })
+            .catch(err => {
+                console.error("无法复制链接到剪贴板:", err);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const url = "{{ host }}/file/{{ file.id }}/name/"; 
+            new QRCode(document.getElementById("qrcode"), {
+                text: url+encodeURIComponent('{{ file.name }}'),
+                width: 128,
+                height: 128
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

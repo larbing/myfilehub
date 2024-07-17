@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <title>文件列表</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/css/style.css?39">
+    <link rel="stylesheet" href="/static/css/index.css?39">
     <script src="/static/js/libs.js?34"></script>
     <script src="/static/js/file_upload.js?9"></script>
     <script src="/static/js/file_push.js?19"></script>
-    <script src="/static/js/file_show.js?15"></script>
+    <script src="/static/js/file_show.js?16"></script>
 </head>
 
 <body>
@@ -32,21 +32,24 @@
 
             {% if f.is_image() %}
             <span class="file-download"><i class="bi bi-card-image"
-                    onclick="shower.openImageWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
+                    onclick="shower.openImageWindow('/share/{{ f.id }}/name/{{ f.name }}')"></i></span>
 
             {% elif f.is_video() %}
             <span class="file-download"><i class="bi bi-play-circle-fill"
-                    onclick="shower.openVideoWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
+                    onclick="shower.openVideoWindow('/share/{{ f.id }}/name/{{ f.name }}')"></i></span>
             
             {% elif f.is_text() %}
             <span class="file-download"><i class="bi bi-journal-code" onclick="shower.openTextWindow('{{ f.id }}','{{ f.name }}')"></i></span>
 
             {% else %}
-            <a href="/file/{{ f.id }}/name/{{ f.name }}" download class="file-download" alt="下载"><i
+            <a href="/share/{{ f.id }}/name/{{ f.name }}" download class="file-download" alt="下载"><i
                     class="bi bi-cloud-arrow-down-fill"></i></a>
             {% endif %}
             <span onclick="pusher.openPushFileWindow('{{ f.id }}','{{ f.name }}',{{ f.size }})" class="file-download"
                 alt="推送"><i class="bi bi-send" alt="推送"></i></span>
+            
+            <a href="/share/{{ f.id }}" class="file-download" ><i class="bi bi-share"></i></a>
+
         </div>
         {% endfor %}
         <!-- 更多文件项... -->

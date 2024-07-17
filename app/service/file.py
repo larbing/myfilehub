@@ -6,7 +6,7 @@ import requests
 import asyncio
 
 from dataclasses import dataclass
-from hashlib import sha256
+from hashlib import sha256,md5
 
 from ..utils import timestamp
 from ..models import Pagination, UrlBuilder
@@ -30,7 +30,7 @@ class FileModel:
     @staticmethod
     def calculate_hash(input_string):
         """
-        计算字符串的SHA-256哈希值。
+        计算字符串的md5哈希值。
         
         参数:
         input_string (str): 输入字符串
@@ -38,7 +38,7 @@ class FileModel:
         返回:
         str: SHA-256哈希值的十六进制表示
         """
-        hash_object = sha256(input_string.encode())
+        hash_object = md5(input_string.encode())
         return hash_object.hexdigest()
     
     @property
