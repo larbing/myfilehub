@@ -38,7 +38,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            const url = "{{ download_host }}/share/{{ file.id }}/name/"+encodeURIComponent('{{ file.name }}'); 
+            const url = "{{ download_host }}/share/redirect/{{ file.id }}/name/"+encodeURIComponent('{{ file.name }}'); 
             new QRCode(document.getElementById("qrcode"), {
                 text: url,
                 width: 128,
@@ -48,7 +48,7 @@
             document.getElementById("download-btn").addEventListener("click", function() {
                 window.location.href = url;
             });
-            
+
         });
 
 

@@ -27,3 +27,9 @@ async def downfile(req:Request):
         return Response(status_code=404,description="File not found",headers={})
 
     return send_file(file,attachment=True)
+
+@frontend.get("/redirect/:id/name/:name")
+async def redirect(req:Request):
+    id = req.path_params.get('id')
+    name = req.path_params.get('name')
+    return Response(status_code=302,description="",headers={'Location':f"{DOWNLOAD_HOST}/share/{id}/name/{name}"})
