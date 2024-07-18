@@ -33,7 +33,7 @@ class FileShower {
     }
 
     openTextWindow(fileId, filename) {
-        const url = "/share/" + fileId + "/name/" + filename;
+        const url = "/file/" + fileId + "/name/" + filename;
         this.popupWindow.style.display = 'flex';
         this.fileText.style.display = 'flex';
         this.updateFileTextButton.style.display = 'flex';

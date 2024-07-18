@@ -32,11 +32,11 @@
 
             {% if f.is_image() %}
             <span class="file-download"><i class="bi bi-card-image"
-                    onclick="shower.openImageWindow('/share/{{ f.id }}/name/{{ f.name }}')"></i></span>
+                    onclick="shower.openImageWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
 
             {% elif f.is_video() %}
             <span class="file-download"><i class="bi bi-play-circle-fill"
-                    onclick="shower.openVideoWindow('/share/{{ f.id }}/name/{{ f.name }}')"></i></span>
+                    onclick="shower.openVideoWindow('/file/{{ f.id }}/name/{{ f.name }}')"></i></span>
             
             {% elif f.is_text() %}
             <span class="file-download"><i class="bi bi-journal-code" onclick="shower.openTextWindow('{{ f.id }}','{{ f.name }}')"></i></span>
