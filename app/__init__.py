@@ -32,7 +32,7 @@ DEVICE_MANAGER = DeviceManager(DeviceInfo(
 def render_template(template_name, **kwargs):
     return JINJA_TEMPLATE.render_template(template_name, **kwargs)
 
-def send_file(file,bytes_limit=0):
+def send_file(file,bytes_limit=0,attachment=False):
     content = file.content[:bytes_limit] if bytes_limit > 0 else file.content
     return Response(status_code=200,description=content,
-                    headers={"Content-Disposition": file.type} )
+                    headers={"Content-Disposition": "attachment" if attachment else file.type} )

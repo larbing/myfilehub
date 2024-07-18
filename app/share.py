@@ -22,9 +22,8 @@ async def share(req:Request):
 async def downfile(req:Request):
     id = req.path_params.get('id')
     file = fileService.get_file_by_id(id)
-    limit = getInt(req.headers,'content-bytes-limit',0)
 
     if not file:
         return Response(status_code=404,description="File not found",headers={})
 
-    return send_file(file,bytes_limit=limit)
+    return send_file(file,attachment=True)
