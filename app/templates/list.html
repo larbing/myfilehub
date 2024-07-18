@@ -37,7 +37,7 @@
         <span onclick="pusher.openPushFileWindow('{{ f.id }}','{{ f.name }}',{{ f.size }})" class="file-download"
             alt="推送"><i class="bi bi-send" alt="推送"></i></span>
 
-        <a href="{{ SHARE_HOST }}/share/{{ f.id }}" class="file-download"><i class="bi bi-share"></i></a>
+        <a href="{{ SHARE_HOST }}/share/{{ f.id }}" class="file-download" target="_blank" ><i class="bi bi-share"></i></a>
 
     </div>
     {% endfor %}
