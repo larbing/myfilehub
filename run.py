@@ -21,7 +21,6 @@ app.add_directory(
 def server():
     app.startup_handler(startup_handler)
     app.include_router(index.frontend)
-    app.include_router(share.frontend)
     app.include_router(api.frontend)
     app.include_router(ws.frontend)
     app.start(port=8080,host="0.0.0.0")

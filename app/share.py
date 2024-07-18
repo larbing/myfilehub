@@ -9,7 +9,7 @@ from .utils import *
 frontend = SubRouter(__name__,prefix="/share")
 
 @frontend.get("/:id")
-async def getfile(req:Request):
+async def share(req:Request):
     id = getString(req.path_params,'id')
     fileService.load()
     file = fileService.get_file_by_id(id)

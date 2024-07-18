@@ -28,7 +28,8 @@ async def index(req:Request):
 
     file_list = fileService.list_files(current_page=page,filter_func=filter_func)
     device_list = deviceManager.get_all_devices()
-    return render_template('index.html',file_list=file_list,time=time,device_list=device_list,type=type)
+    return render_template('index.html',file_list=file_list,
+                           time=time,device_list=device_list,type=type,SHARE_HOST=SHARE_HOST)
 
 @frontend.post("/upload")
 async def upload(req:Request):
