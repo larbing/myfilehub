@@ -11,7 +11,6 @@ class FilePusher {
         this.popupWindow = this.$('popupPushWindow');
         this.progress = this.$('pushProgress');
         this.pushMessage = this.$('pushMessage');
-        this.deviceSelect = this.$('deviceSelect');
         this.pushFileButton = this.$('pushFileButton');
         this.closePushWindow = this.$('closePushWindow');
         this.fileId = this.$('fileId');
@@ -93,6 +92,6 @@ class FilePusher {
     }
 
     getDeviceId() {
-        return this.deviceSelect.value;
+        return this.deviceList.value;
     }
 }
