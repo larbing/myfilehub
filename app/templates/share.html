@@ -16,7 +16,7 @@
             <p><strong>文件大小:</strong> {{ file.size | filesizeformat }}</p>
             <div id="qrcode"></div>
         </div>
-        <a href="{{ download_host }}/share/{{ file.id }}/name/{{ file.name }}" class="download-btn">下载</a>
+        <a href="{{ download_host }}/share/{{ file.id }}/name/{{ file.name }}" target="_blank" class="download-btn">下载</a>
         <input type="text" id="share-link" value="{{ share_host }}/share/{{ file.id }}" readonly>
         <button onclick="copyLink()">复制链接</button>
     </div>
