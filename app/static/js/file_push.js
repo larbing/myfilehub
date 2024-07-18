@@ -15,6 +15,7 @@ class FilePusher {
         this.pushFileButton = this.$('pushFileButton');
         this.closePushWindow = this.$('closePushWindow');
         this.fileId = this.$('fileId');
+        this.deviceList = this.$('deviceList');
         this.init();
     }
 
@@ -32,6 +33,20 @@ class FilePusher {
         this.progress.value = 0;
         this.progress.max = fileSize;
         this.printMessage("等待设备推送...");
+        this.loadDeviceList();
+    }
+
+    loadDeviceList() {
+        fetch('/device-list')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(text => {
+            this.deviceList.innerHTML = text;
+        })
     }
 
     closeWindowHandle(e) {

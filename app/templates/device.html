@@ -1,0 +1,6 @@
+<select id="deviceSelect">
+    <option value="">请选择设备</option>
+    {% for info in device_list %}
+    <option value="{{ info.fingerprint }}">{{ info.alias }}</option>
+    {% endfor %}
+</select>

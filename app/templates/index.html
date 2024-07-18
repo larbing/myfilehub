@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/static/css/index.css?39">
     <script src="/static/js/libs.js?34"></script>
     <script src="/static/js/file_upload.js?9"></script>
-    <script src="/static/js/file_push.js?19"></script>
+    <script src="/static/js/file_push.js?20"></script>
     <script src="/static/js/file_show.js?16"></script>
 </head>
 
@@ -21,12 +21,8 @@
     <div id="popupPushWindow" class="popup" style="display:none;">
         <div class="popup-content">
             <div id="popupTitle" class="popupTitle"><span id="fileName"></span></div>
-            <select id="deviceSelect">
-                <option value="">请选择设备</option>
-                {% for info in device_list %}
-                <option value="{{ info.fingerprint }}">{{ info.alias }}</option>
-                {% endfor %}
-            </select>
+
+            <span id="deviceList"></span>
 
             <button id="pushFileButton" class="button">推送</button>
             <progress id="pushProgress" class="progress" value="0" max="0" style="display: none;"></progress>
@@ -73,8 +69,8 @@
             window.shower = new FileShower();
         };
 
-        function loadContent(type,page) {
-            fetch('/file-list/'+type+"?page="+page).then(function (response) {
+        function loadContent(type, page) {
+            fetch('/file-list/' + type + "?page=" + page).then(function (response) {
                 return response.text();
             }).then(function (text) {
                 document.getElementById("content").innerHTML = text;
@@ -82,18 +78,18 @@
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            loadContent("",1);
+            loadContent("", 1);
         });
-        
+
         function switchTab(event, type) {
             var tabButtons = document.getElementsByClassName("tab-button");
             for (var i = 0; i < tabButtons.length; i++) {
                 tabButtons[i].classList.remove("active");
             }
             event.target.classList.add("active");
-            loadContent(type,1);
+            loadContent(type, 1);
         }
-        
+
     </script>
 </body>
 

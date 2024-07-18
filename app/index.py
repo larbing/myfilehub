@@ -12,8 +12,7 @@ frontend = SubRouter(__name__)
 
 @frontend.get("/")
 async def index(req:Request):
-    device_list = deviceManager.get_all_devices()
-    return render_template('index.html',device_list=device_list)
+    return render_template('index.html')
 
 @frontend.get("/file-list")
 @frontend.get("/file-list/:path")
@@ -35,6 +34,11 @@ async def list(req:Request):
     device_list = deviceManager.get_all_devices()
     return render_template('list.html',file_list=file_list,
                            time=time,device_list=device_list,type=type,SHARE_HOST=SHARE_HOST)
+
+@frontend.get("/device-list")
+def device_list(req:Request):
+    device_list = deviceManager.get_all_devices()
+    return render_template('device.html',device_list=device_list)
 
 @frontend.post("/upload")
 async def upload(req:Request):
