@@ -15,8 +15,8 @@ async def index(req:Request):
     device_list = deviceManager.get_all_devices()
     return render_template('index.html',device_list=device_list)
 
-@frontend.get("/list")
-@frontend.get("/list/:path")
+@frontend.get("/file-list")
+@frontend.get("/file-list/:path")
 async def list(req:Request):
     page = getInt(req.query_params,'page',1)
     type = getString(req.path_params,'path','')

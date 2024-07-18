@@ -74,7 +74,7 @@
         };
 
         function loadContent(type,page) {
-            fetch('/list/'+type+"?page="+page).then(function (response) {
+            fetch('/file-list/'+type+"?page="+page).then(function (response) {
                 return response.text();
             }).then(function (text) {
                 document.getElementById("content").innerHTML = text;
