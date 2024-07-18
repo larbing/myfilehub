@@ -11,10 +11,15 @@ frontend = SubRouter(__name__)
 
 
 @frontend.get("/")
-@frontend.get("/:path")
 async def index(req:Request):
+    device_list = deviceManager.get_all_devices()
+    return render_template('index.html',device_list=device_list)
+
+@frontend.get("/list")
+@frontend.get("/list/:path")
+async def list(req:Request):
     page = getInt(req.query_params,'page',1)
-    type = getString(req.path_params,'path','/')
+    type = getString(req.path_params,'path','')
 
     def filter_func(file):
         if type == 'videos':
@@ -28,7 +33,7 @@ async def index(req:Request):
 
     file_list = fileService.list_files(current_page=page,filter_func=filter_func)
     device_list = deviceManager.get_all_devices()
-    return render_template('index.html',file_list=file_list,
+    return render_template('list.html',file_list=file_list,
                            time=time,device_list=device_list,type=type,SHARE_HOST=SHARE_HOST)
 
 @frontend.post("/upload")
