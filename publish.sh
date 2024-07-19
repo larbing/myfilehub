@@ -3,7 +3,7 @@
 # 定义变量
 GIT_REPO_URL="https://github.sonainai.com/larbing/myfilehub.git"
 PROJECT_DIR="/home/rock/git/myfilehub"
-env_file="/home/rock/config/myfilehub.env"
+ENV_FILE="/home/rock/config/myfilehub.env"
 DOCKER_CONTAINER_NAME="myfilehub"
 DOCKER_IMAGE_NAME="abc7223/myfilehub"
 DOCKER_TAG="latest" # 或者指定版本号，如 "v1.0"
@@ -28,7 +28,7 @@ clone_git_repo() {
 
 copy_config() {
     echo "复制配置文件..."
-    cp $env_file $PROJECT_DIR/robyn.env
+    cp $ENV_FILE $PROJECT_DIR/robyn.env
 }
 
 # 函数：构建Docker镜像
