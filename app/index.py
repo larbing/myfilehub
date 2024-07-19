@@ -30,9 +30,9 @@ async def list(req:Request):
         else:
             return True
 
-    file_list = fileService.list_files(current_page=page,filter_func=filter_func)
+    pagination = fileService.list_files(current_page=page,filter_func=filter_func)
     device_list = deviceManager.get_all_devices()
-    return render_template('list.html',file_list=file_list,
+    return render_template('list.html',pagination=pagination,
                            time=time,device_list=device_list,type=type,SHARE_HOST=SHARE_HOST)
 
 @frontend.get("/device-list")

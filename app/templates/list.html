@@ -9,11 +9,9 @@
 </div>
 
 <div id="fileList">
-    {% for f in file_list %}
+    {% for f in pagination %}
     <div class="file-item">
         <span class="file-name">{{ f.name }}</span>
-
-
 
         {{ f.size | filesizeformat }} {{ time.strftime("%Y-%m-%d",
         time.localtime(f.created)) }}
@@ -45,14 +43,14 @@
 </div>
 
 <div id="pagination">
-    <a href="#" class="page-link">上一页</a>
-    {% for i in file_list.get_pagination_bar() %}
-    {% if file_list.is_current_page(i) %}
-    <span class="current-page">{{ i }}</span>
+    <a onclick="loadContent('{{ type }}',{{ pagination.get_up_page() }})" class="page-link">上一页</a>
+    {% for i in pagination.get_pagination_bar() %}
+    {% if pagination.is_current_page(i) %}
+        <span class="current-page">{{ i }}</span>
     {% else %}
-    <a href="#" onclick="loadContent('{{ type }}',{{ i }})" class="page-link">{{ i }}</a>
+        <a href="#" onclick="loadContent('{{ type }}',{{ i }})" class="page-link">{{ i }}</a>
     {% endif %}
     {% endfor %}
     <!-- 可以添加更多的页面链接 -->
-    <a href="#" class="page-link">下一页</a>
+    <a onclick="loadContent('{{ type }}',{{ pagination.get_next_page() }})" class="page-link">下一页</a>
 </div>
