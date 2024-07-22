@@ -1,12 +1,15 @@
 
 class FilePusher {
 
-    constructor(url) {
+    constructor(websocket) {
+        
         this.$ = function (id) {
             return document.getElementById(id);
         }
 
-        this.localSendClient = new LocalSendClient();
+        this.httpClient = new HttpClient();
+        this.websocket = websocket;
+        this.websocket.subscribe(this);
 
         this.popupWindow = this.$('popupPushWindow');
         this.progress = this.$('pushProgress');
@@ -15,6 +18,7 @@ class FilePusher {
         this.closePushWindow = this.$('closePushWindow');
         this.fileId = this.$('fileId');
         this.deviceList = this.$('deviceList');
+        
         this.init();
     }
 
@@ -69,14 +73,37 @@ class FilePusher {
         this.progress.style.display = 'flex';
         this.progress.value = 0;
         this.printMessage("正在推送...");
-        const progress = this.updateProgress.bind(this);
-        this.localSendClient.push(fileId, deviceId,progress)
+        this.pushFile(fileId, deviceId)
             .then(() => {
                 this.printMessage("推送成功");
             })
             .catch(() => {
                 this.printMessage("推送失败");
         });
+    }
+
+    onMessage(message) {
+        self = this;
+        try 
+        {
+          if (message.name == 'PUSH_FILE_PROGRESS') {
+              self.updateProgress(message.values.total_bytes);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+    }
+
+    async pushFile(fileId, deviceId) {
+        const url = '/api/localsend/v2/push';
+        const data = {
+          fileId: fileId,
+          deviceId: deviceId,
+          socketId: this.websocket.socketId,
+        };    
+        const response = this.httpClient.sendPostRequest(url, data);
+        response.catch((error) => {console.error(error);});
+        return response;
     }
 
     printMessage(msg) {

@@ -1,38 +1,8 @@
-class LocalSendClient {
+class HttpClient {
   constructor() {
-    this.socket = new MyWebSocket('ws://' + document.location.host + '/ws');
   }
 
-  async push(fileId, deviceId,updateProgress) {
-    const url = '/api/localsend/v2/push';
-    const data = {
-      fileId: fileId,
-      deviceId: deviceId,
-      socketId: this.socket.socketId,
-    };
 
-    this.socket.onMessage = (message) => {
-      try 
-      {
-        if (message.name == 'PUSH_FILE_PROGRESS') {
-            updateProgress(message.values.total_bytes);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    const response = this.sendPostRequest(url, data);
-    response.then((text) => {
-    })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    return response;
-  }
-
-  // 标记为异步的sendPostRequest方法
   async sendPostRequest(url, data) {
 
     const response = await fetch(url, {
@@ -59,6 +29,7 @@ class MyWebSocket {
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 5; // 最大重试次数
     this.connect();
+    this.subscribers = {};
   }
 
   connect() {
@@ -76,7 +47,14 @@ class MyWebSocket {
         if (message.name == 'CONNECT_SUCCESS') {
           this.socketId = message.values.socket_id;
         }
-        this.onMessage(message);
+        // this.onMessage(message);
+
+        if (this.subscribers["message"]) {
+          this.subscribers["message"].forEach((subscriber) => {
+            subscriber.onMessage(message);
+          });
+        }
+
       } catch (e) {
         console.error(e);
       }
@@ -93,6 +71,11 @@ class MyWebSocket {
       this.onClose();
       this.reconnect(); // 尝试重连
     };
+  }
+
+  subscribe(subscriber) {
+      this.subscribers["message"] = this.subscribers["message"] || [];
+      this.subscribers["message"].push(subscriber);
   }
 
   reconnect() {
@@ -112,6 +95,9 @@ class MyWebSocket {
   onMessage(message) {
     // console.log('Received data from server1: ', message);
   }
+
+  
+
   onError(error) { }
   onClose() { }
 }

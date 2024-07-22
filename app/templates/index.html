@@ -6,9 +6,9 @@
     <title>文件列表</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/index.css?39">
-    <script src="/static/js/libs.js?34"></script>
+    <script src="/static/js/libs.js?37"></script>
     <script src="/static/js/file_upload.js?9"></script>
-    <script src="/static/js/file_push.js?21"></script>
+    <script src="/static/js/file_push.js?24"></script>
     <script src="/static/js/file_show.js?16"></script>
 </head>
 
@@ -64,9 +64,10 @@
 
     <script>
         window.onload = function () {
-            window.pusher = new FilePusher('ws://' + document.location.host + '/ws');
+            const webSocket = new MyWebSocket('ws://' + document.location.host + '/ws');
+            window.pusher   = new FilePusher(webSocket);
             window.uploader = new FileUploader();
-            window.shower = new FileShower();
+            window.shower   = new FileShower();
         };
 
         function loadContent(type, page) {
