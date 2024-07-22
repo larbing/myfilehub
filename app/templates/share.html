@@ -38,7 +38,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            const url = "{{ share_host }}/share/redirect/{{ file.id }}/name/"+encodeURIComponent('{{ file.name }}'); 
+            const url = "/share/redirect/{{ file.id }}/name/"+encodeURIComponent('{{ file.name }}'); 
             new QRCode(document.getElementById("qrcode"), {
                 text: url,
                 width: 128,
