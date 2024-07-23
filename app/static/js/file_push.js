@@ -74,11 +74,11 @@ class FilePusher {
         this.progress.value = 0;
         this.printMessage("正在推送...");
         this.pushFile(fileId, deviceId)
-            .then(() => {
-                this.printMessage("推送成功");
-            })
-            .catch(() => {
-                this.printMessage("推送失败");
+        .then(() => {
+            this.printMessage("推送成功");
+        })
+        .catch(() => {
+            this.printMessage("推送失败");
         });
     }
 
@@ -101,9 +101,7 @@ class FilePusher {
           deviceId: deviceId,
           socketId: this.websocket.socketId,
         };    
-        const response = this.httpClient.sendPostRequest(url, data);
-        response.catch((error) => {console.error(error);});
-        return response;
+        return this.httpClient.sendPostRequest(url, data);
     }
 
     printMessage(msg) {
