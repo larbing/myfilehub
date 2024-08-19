@@ -1,7 +1,7 @@
 import multiprocessing
 import os
 
-from robyn import Robyn 
+from robyn import Robyn ,ALLOW_CORS
 
 app = Robyn(__file__)
 
@@ -17,6 +17,8 @@ app.add_directory(
         route="/static",
         directory_path=STATIC_PATH,
 )
+
+ALLOW_CORS(app,origins=["*"])
 
 def server():
     app.startup_handler(startup_handler)

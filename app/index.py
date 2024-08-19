@@ -2,7 +2,7 @@
 import os.path
 import time
 
-from robyn import SubRouter,Request,Response
+from robyn import SubRouter,Request,Response,jsonify
 from . import render_template,UPLOAD_PATH,send_file
 from . import FILE_SERVICE as fileService,DEVICE_MANAGER as deviceManager,SHARE_HOST
 from .utils import *
@@ -35,11 +35,36 @@ async def list(req:Request):
     return render_template('list.html',pagination=pagination,
                            time=time,device_list=device_list,type=type,SHARE_HOST=SHARE_HOST)
 
+
+@frontend.get("/get-list")
+@frontend.get("/get-list/:path")
+async def list(req:Request):
+    page = getInt(req.query_params,'page',1)
+    type = getString(req.path_params,'path','')
+
+    def filter_func(file):
+        if type == 'videos':
+            return file.is_video()
+        elif type == 'images':
+            return file.is_image()
+        elif type == 'documents':
+            return file.is_text()
+        else:
+            return True
+
+    pagination = fileService.list_files(current_page=page,filter_func=filter_func)
+    result = {}
+    result['resutls'] = pagination.resutls
+    result.update(pagination.pageInfo)
+
+    return jsonify(result)
+
 @frontend.get("/device-list")
 def device_list(req:Request):
     device_list = deviceManager.get_all_devices()
     return render_template('device.html',device_list=device_list)
 
+@frontend.options("/upload")
 @frontend.post("/upload")
 async def upload(req:Request):
     files = req.files

@@ -31,7 +31,7 @@ async def prepare_upload(req:Request):
     for key in files:
         file = files[key]
         session.set(file['id'],file['fileName'])
-        results['files'][file['id']] = file['fileName']
+        results['files'][file['id']] = file['id']
 
     return results
 
@@ -56,7 +56,6 @@ async def upload(req:Request):
     
     file = {fileName:req.body}
     fileService.save_files(file)
-    sessionManager.remove(sessionId)
 
     return Response(status_code=200,description="Upload success",headers={})
 
@@ -85,8 +84,12 @@ def push_file_progress(socket_id):
 
     return update_progress
 
+@frontend.options("/push")
 @frontend.post("/push")
 async def push(req:Request):
+
+    if req.method == "OPTIONS":
+        return Response(status_code=200,description="success",headers={})
 
     device_id = getString(req.json(),'deviceId')
     file_id   = getString(req.json(),'fileId')

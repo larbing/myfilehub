@@ -77,7 +77,7 @@ class MyWebSocket {
     if (!this.subscribers["message"]) {
       this.subscribers["message"] = [];
     }
-    
+
     this.subscribers["message"].push(subscriber);
   }
 
@@ -98,9 +98,6 @@ class MyWebSocket {
   onMessage(message) {
     // console.log('Received data from server1: ', message);
   }
-
-
-
   onError(error) { }
   onClose() { }
 }

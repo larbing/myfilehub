@@ -67,4 +67,6 @@ class Pagination(object):
     def pageInfo(self):
         return {"page_info":{"page_no":self.pageN,
                         "page_size":self.pageSize,
-                        "page_total":self.pagecount}}
+                        "page_total":self.pagecount,
+                        "total":self.total,
+                        }}

@@ -63,12 +63,15 @@
     <input type="hidden" value="" id="fileId"></input>
 
     <script>
+
         window.onload = function () {
             const webSocket = new MyWebSocket('ws://' + document.location.host + '/ws');
             window.pusher   = new FilePusher(webSocket);
             window.uploader = new FileUploader();
             window.shower   = new FileShower();
+
         };
+
 
         function loadContent(type, page) {
             fetch('/file-list/' + type + "?page=" + page).then(function (response) {
