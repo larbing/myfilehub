@@ -146,9 +146,13 @@ class FileService:
     
     def write_to_file(self, binary_data, file_name):
         file_path = os.path.join(self.base_path, file_name)
+        chunk_size = 4096  # 4KB 的块大小
         with open(file_path, "wb") as file:
-            file.write(binary_data)
-        return FileModel(file_name, len(binary_data), file_path, timestamp())
+            for i in range(0, len(binary_data), chunk_size):
+                chunk = binary_data[i:i+chunk_size]
+                file.write(chunk)
+        file_size = os.path.getsize(file_path)
+        return FileModel(file_name, file_size, file_path, timestamp())
 
     def save_files(self, files:dict[str, bytes]):
         for file_name, binary_data in files.items():
